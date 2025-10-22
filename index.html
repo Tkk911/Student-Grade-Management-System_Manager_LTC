@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบจัดการผลการเรียน - วิทยาลัยเทคโนโลยีแหลมทอง</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="theme-transition">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <img src="logoLTC.png" alt="วิทยาลัยเทคโนโลยีแหลมทอง" style="max-width: 50px; height: auto;">
+                    </div>
+                    <div class="school-info">
+                        <h2>วิทยาลัยเทคโนโลยีแหลมทอง</h2>
+                        <h3>ระบบจัดการผลการเรียน  กลุ่มงาน ไฟฟ้าและอิเล็กทรอนิกส์</h3>
+                    </div>
+                </div>
+                <div class="auth-section">
+                    <div class="theme-switcher">
+                        <button class="theme-toggle" id="themeToggle">
+                            <i class="fas fa-moon"></i>
+                            <span>โหมดกลางคืน</span>
+                        </button>
+                    </div>
+                    <div class="mode-indicator" id="modeIndicator">
+                        <i class="fas fa-user"></i>
+                        <span id="modeText">โหมดผู้เยี่ยมชม</span>
+                    </div>
+                    <button class="btn btn-outline" id="printBtn">
+                        <i class="fas fa-print"></i> พิมพ์
+                    </button>
+                    <button class="btn btn-primary" id="loginBtn">
+                        <i class="fas fa-sign-in-alt"></i> <span id="loginText">เข้าสู่ระบบ</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <!-- Guest Mode (Default) -->
+            <div id="guestMode">
+                <section class="welcome-section">
+                    <h2>ค้นหาผลการเรียน</h2>
+                    <p>กรุณากรอกรหัสนักเรียน หรือ ชื่อ-สกุล เพื่อค้นหาผลการเรียน</p>
+                    <div class="search-box">
+                        <input type="text" id="searchInput" placeholder="รหัสนักเรียน หรือ ชื่อ-สกุล">
+                        <button id="searchBtn">
+                            <i class="fas fa-search"></i> ค้นหา
+                        </button>
+                    </div>
+                </section>
+
+                <section class="grade-sheet" id="gradeSheet" style="display: none;">
+                    <!-- Grade sheet content will be loaded here -->
+                </section>
+            </div>
+
+            <!-- Admin Mode -->
+            <div id="adminMode" style="display: none;">
+                <!-- Control Panel -->
+                <section class="control-panel">
+                    <div class="panel-header">
+                        <h2>จัดการผลการเรียน</h2>
+                        <div>
+                            <button class="btn btn-success" id="saveAllBtn">
+                                <i class="fas fa-save"></i> บันทึกทั้งหมด
+                            </button>
+                            <button class="btn btn-success" id="addCoursesFromProgramBtn">
+                                <i class="fas fa-book"></i> เพิ่มรายวิชาจากหลักสูตร
+                            </button>
+                            <button class="btn btn-primary" id="addStudentBtn">
+                                <i class="fas fa-user-plus"></i> เพิ่มนักเรียน
+                            </button>
+                            <button class="btn btn-warning" id="importBtn">
+                                <i class="fas fa-file-import"></i> นำเข้า
+                            </button>
+                            <button class="btn btn-info" id="exportBtn">
+                                <i class="fas fa-file-export"></i> ส่งออก
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filters">
+                        <div class="form-group">
+                            <label for="filterClass">ห้อง</label>
+                            <select id="filterClass" class="form-control">
+                                <option value="all">ทั้งหมด</option>
+                                <option value="ปวส.ชฟ.ห้อง1">ชฟ.ห้อง1</option>
+                                <option value="ปวส.ชฟ.ห้อง6">ชฟ.ห้อง6</option>
+                                <option value="ปวส.ชอ.ห้อง1">ชอ.ห้อง1</option>
+                                <option value="ปวส.ชอ.ห้อง6">ชอ.ห้อง6</option>
+                                <option value="ปวช.ช่างไฟฟ้า">ปวช.ช่างไฟฟ้า</option>
+                                <option value="ปวช.อิเล็กทรอนิกส์">ปวช.อิเล็กทรอนิกส์</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterSemester">ภาคเรียน</label>
+                            <select id="filterSemester" class="form-control">
+                                <option value="all">ทั้งหมด</option>
+                                <option value="1">ภาคเรียนที่ 1</option>
+                                <option value="2">ภาคเรียนที่ 2</option>
+                                <option value="3">ภาคเรียนที่ 3</option>
+                                <option value="4">ภาคเรียนที่ 4</option>
+                                <option value="5">ภาคเรียนที่ 5</option>
+                                <option value="6">ภาคเรียนที่ 6</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterProgram">หลักสูตร</label>
+                            <select id="filterProgram" class="form-control">
+                                <option value="all">ทั้งหมด</option>
+                                <option value="ปวช.">ปวช.</option>
+                                <option value="ปวส.">ปวส.</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="filterMajor">สาขาวิชา</label>
+                            <select id="filterMajor" class="form-control">
+                                <option value="all">ทั้งหมด</option>
+                                <option value="ไฟฟ้า">ไฟฟ้า</option>
+                                <option value="เทคโนโลยีอิเล็กทรอนิกส์">เทคโนโลยีอิเล็กทรอนิกส์</option>
+                                <option value="ช่างอิเล็กทรอนิกส์">ช่างอิเล็กทรอนิกส์</option>
+                                <option value="ช่างไฟฟ้า">ช่างไฟฟ้า</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="student-search">
+                        <div class="form-group">
+                            <label for="searchStudent">ค้นหานักเรียน (รหัสหรือชื่อ)</label>
+                            <div style="display: flex; gap: 8px;">
+                                <input type="text" id="searchStudent" class="form-control" placeholder="ระบุรหัสหรือชื่อนักเรียน">
+                                <button class="btn btn-info" id="adminSearchBtn">
+                                    <i class="fas fa-search"></i> ค้นหา
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Grade Sheet -->
+                <section class="grade-sheet" id="adminGradeSheet">
+                    <!-- Grade sheet content will be loaded here -->
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>เข้าสู่ระบบผู้ดูแล</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">ชื่อผู้ใช้</label>
+                    <input type="text" id="username" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">รหัสผ่าน</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                    </button>
+                </div>
+                <div style="text-align: center; margin-top: 10px; font-size: 0.8rem; color: var(--text-muted);">
+                    <!--<p>ชื่อผู้ใช้:........................ | รหัสผ่าน:...........................</p>-->
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Student Modal -->
+    <div class="modal" id="studentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="studentModalTitle">เพิ่มนักเรียน</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="studentForm">
+                <input type="hidden" id="studentId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newStudentId">รหัสนักเรียน</label>
+                        <input type="text" id="newStudentId" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentName">ชื่อ-สกุล</label>
+                        <input type="text" id="newStudentName" class="form-control" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newStudentLevel">ระดับชั้น</label>
+                        <select id="newStudentLevel" class="form-control" required onchange="updateClassOptions()">
+                            <option value="">เลือกระดับชั้น</option>
+                            <option value="ปวช.1">ปวช.1</option>
+                            <option value="ปวช.2">ปวช.2</option>
+                            <option value="ปวช.3">ปวช.3</option>
+                            <option value="ปวส.1">ปวส.1</option>
+                            <option value="ปวส.2">ปวส.2</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentMajor">สาขาวิชา</label>
+                        <select id="newStudentMajor" class="form-control" required onchange="updateClassOptions()">
+                            <option value="">เลือกสาขาวิชา</option>
+                            <option value="ช่างไฟฟ้า">ช่างไฟฟ้า</option>
+                            <option value="อิเล็กทรอนิกส์">อิเล็กทรอนิกส์</option>
+                            <option value="ไฟฟ้า">ไฟฟ้า (ปวส.)</option>
+                            <option value="เทคโนโลยีอิเล็กทรอนิกส์">เทคโนโลยีอิเล็กทรอนิกส์ (ปวส.)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="newStudentClass">ห้อง</label>
+                        <select id="newStudentClass" class="form-control" required>
+                            <option value="">เลือกห้อง</option>
+                            <!-- Options will be populated by JavaScript -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="newStudentProgram">หลักสูตร</label>
+                        <select id="newStudentProgram" class="form-control" required>
+                            <option value="">เลือกหลักสูตร</option>
+                            <option value="ปวช.">ปวช.</option>
+                            <option value="ปวส.">ปวส.</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newStudentYear">ปีการศึกษา</label>
+                    <input type="text" id="newStudentYear" class="form-control" value="2567" required>
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" id="autoAddCourses" class="form-check-input" checked>
+                        <label for="autoAddCourses" class="form-check-label">เพิ่มรายวิชาตามหลักสูตรอัตโนมัติ</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-save"></i> บันทึก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add/Edit Course Modal -->
+    <div class="modal" id="courseModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="courseModalTitle">เพิ่มรายวิชา</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="courseForm">
+                <input type="hidden" id="courseId">
+                <input type="hidden" id="courseSemester">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="courseCode">รหัสวิชา</label>
+                        <input type="text" id="courseCode" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseCredits">หน่วยกิต</label>
+                        <input type="number" id="courseCredits" class="form-control" min="0" max="10" step="0.5" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="courseName">ชื่อวิชา</label>
+                    <input type="text" id="courseName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="courseGrade">เกรด</label>
+                    <select id="courseGrade" class="form-control" required>
+                        <option value="">เลือกเกรด</option>
+                        <option value="4">4</option>
+                        <option value="3.5">3.5</option>
+                        <option value="3">3</option>
+                        <option value="2.5">2.5</option>
+                        <option value="2">2</option>
+                        <option value="1.5">1.5</option>
+                        <option value="1">1</option>
+                        <option value="0">0</option>
+                        <option value="มส.">มส.</option>
+                        <option value="ขร.">ขร.</option>
+                        <option value="ผ.">ผ.</option>
+                        <option value="มผ.">มผ.</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-save"></i> บันทึก
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import/Export Modal -->
+    <div class="modal" id="importExportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="importExportTitle">นำเข้า/ส่งออกข้อมูล</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-tabs">
+                <button class="modal-tab active" data-tab="import">นำเข้าข้อมูล</button>
+                <button class="modal-tab" data-tab="export">ส่งออกข้อมูล</button>
+            </div>
+            
+            <div id="importTab" class="modal-tab-content active">
+                <div class="form-group">
+                    <label for="importFile">เลือกไฟล์ JSON</label>
+                    <input type="file" id="importFile" class="form-control" accept=".json">
+                </div>
+                <div class="form-group">
+                    <label for="importType">ประเภทข้อมูล</label>
+                    <select id="importType" class="form-control">
+                        <option value="all">ทั้งหมด</option>
+                        <option value="students">ข้อมูลนักเรียน</option>
+                        <option value="courses">ข้อมูลรายวิชา</option>
+                        <option value="grades">ข้อมูลเกรด</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" id="importDataBtn" style="width: 100%;">
+                    <i class="fas fa-upload"></i> นำเข้าข้อมูล
+                </button>
+            </div>
+            
+            <div id="exportTab" class="modal-tab-content">
+                <div class="form-group">
+                    <label for="exportType">ประเภทข้อมูล</label>
+                    <select id="exportType" class="form-control">
+                        <option value="all">ทั้งหมด</option>
+                        <option value="students">ข้อมูลนักเรียน</option>
+                        <option value="courses">ข้อมูลรายวิชา</option>
+                        <option value="grades">ข้อมูลเกรด</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="exportFormat">รูปแบบ</label>
+                    <select id="exportFormat" class="form-control">
+                        <option value="json">JSON</option>
+                        <option value="csv">CSV</option>
+                    </select>
+                </div>
+                <button class="btn btn-info" id="exportDataBtn" style="width: 100%;">
+                    <i class="fas fa-download"></i> ส่งออกข้อมูล
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Courses From Program Modal -->
+    <div class="modal" id="addCoursesModal">
+        <div class="modal-content" style="max-width: 700px;">
+            <div class="modal-header">
+                <h3>เพิ่มรายวิชาจากหลักสูตร</h3>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="coursesSemester">ภาคเรียน</label>
+                    <select id="coursesSemester" class="form-control">
+                        <option value="1">ภาคเรียนที่ 1</option>
+                        <option value="2">ภาคเรียนที่ 2</option>
+                        <option value="3">ภาคเรียนที่ 3</option>
+                        <option value="4">ภาคเรียนที่ 4</option>
+                        <option value="5">ภาคเรียนที่ 5</option>
+                        <option value="6">ภาคเรียนที่ 6</option>
+                    </select>
+                </div>
+                
+                <div class="courses-list-container">
+                    <h4>รายวิชาในหลักสูตร</h4>
+                    <div id="coursesList" class="courses-list">
+                        <!-- Courses will be populated here -->
+                    </div>
+                </div>
+                
+                <div class="selected-courses-summary">
+                    <h4>รายวิชาที่เลือก (<span id="selectedCount">0</span> รายวิชา)</h4>
+                    <div id="selectedCourses" class="selected-courses">
+                        <!-- Selected courses will be shown here -->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cancelAddCourses">ยกเลิก</button>
+                <button type="button" class="btn btn-primary" id="confirmAddCourses">เพิ่มรายวิชาที่เลือก</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>วิทยาลัยเทคโนโลยีแหลมทอง กลุ่มงานไฟฟ้าและอิเล็กทรอนิกส์ </p>
+                <p>© 2025 ระบบจัดการผลการเรียน(Admin:tkk911)อีเมล:ติดต่อ(klomklaotkk911@gmail.com)</p>
+            </div>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

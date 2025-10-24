@@ -147,8 +147,8 @@ const programData = {
                     { code: "20105-2006", name: "โปรแกรมเมเบิลลอจิกคอนโทรล", credits: 3 },
                     { code: "20105-2010", name: "หุ่นยนต์เบื้องต้น", credits: 2 },
                     { code: "20105-2032", name: "โครงงานด้านอิเล็กทรอนิกส์", credits: 4 },
-                    { code: "20105-2022", name: "พื้นฐานเซนเซอร์ในงานอุตสาหกรรม", credits: 3 },
-                    { code: "20105-2026", name: "งานบริการคอมพิวเตอร์", credits: 2 },
+                    { code: "20105-2022", name: "การออกแบบวงจรอิเล็กทรอนิกส์", credits: 3 },
+                    { code: "20105-2026", name: "การติดตั้งและบำรุงรักษาระบบอิเล็กทรอนิกส์", credits: 2 },
                     { code: "20000-2005", name: "กิจกรรมองค์การวิชาชีพ 2", credits: 0 }
                 ]
             }
@@ -1147,11 +1147,13 @@ function showCourseModal(course = null, semester = '1') {
         document.getElementById('courseCredits').value = course.credits;
         document.getElementById('courseGrade').value = course.grade;
         document.getElementById('courseSemester').value = semester;
+        document.getElementById('courseSemesterSelect').value = semester;
     } else {
         modalTitle.textContent = 'เพิ่มรายวิชา';
         form.reset();
         document.getElementById('courseId').value = '';
         document.getElementById('courseSemester').value = semester;
+        document.getElementById('courseSemesterSelect').value = semester;
     }
     
     courseModal.style.display = 'flex';
@@ -1161,7 +1163,7 @@ async function handleCourseSubmit(e) {
     e.preventDefault();
     
     const courseId = document.getElementById('courseId').value;
-    const semester = document.getElementById('courseSemester').value;
+    const semester = document.getElementById('courseSemesterSelect').value;
     const code = document.getElementById('courseCode').value;
     const name = document.getElementById('courseName').value;
     const credits = parseInt(document.getElementById('courseCredits').value);
@@ -1170,9 +1172,18 @@ async function handleCourseSubmit(e) {
     let result;
     
     if (courseId) {
-        // แก้ไขวิชาที่มีอยู่ (ในระบบจริงต้องมีฟังก์ชันแก้ไข)
-        showNotification('ระบบแก้ไขรายวิชายังไม่พร้อมใช้งาน', 'warning');
-        return;
+        // แก้ไขวิชาที่มีอยู่ - ใช้ updateGrade สำหรับอัพเดทเกรด
+        result = await callGAS('updateGrade', {
+            studentId: currentStudent.id,
+            courseId: courseId,
+            semester: semester,
+            grade: grade
+        });
+        
+        if (result.success) {
+            // อัพเดทข้อมูลอื่นๆ ด้วย (ถ้ามี)
+            showNotification('แก้ไขรายวิชาเรียบร้อยแล้ว', 'success');
+        }
     } else {
         // เพิ่มวิชาใหม่
         result = await callGAS('addCourse', {
@@ -1187,7 +1198,6 @@ async function handleCourseSubmit(e) {
     
     if (result.success) {
         courseModal.style.display = 'none';
-        showNotification('เพิ่มรายวิชาเรียบร้อยแล้ว', 'success');
         
         // โหลดข้อมูลใหม่
         const studentResult = await callGAS('getStudentById', { id: currentStudent.id });
@@ -1252,7 +1262,7 @@ function showAddCoursesModal() {
     // โหลดรายวิชาจากหลักสูตรตามข้อมูลนักเรียน
     const program = currentStudent.program;
     const major = currentStudent.major;
-    const className = currentStudent.class.trim(); // ← เพิ่ม .trim() เพื่อลบช่องว่าง
+    const className = currentStudent.class.trim();
     const semester = semesterSelect.value;
     
     let availableCourses = [];
@@ -1303,14 +1313,6 @@ function showAddCoursesModal() {
         showNotification('ไม่พบรายวิชาในหลักสูตรสำหรับภาคเรียนนี้', 'warning');
         console.log('No courses found for:', { program, major, className, semester });
     }
-
-// เพิ่มในฟังก์ชัน showAddCoursesModal()
-console.log('=== DEBUG INFO ===');
-console.log('Student:', currentStudent);
-console.log('Program Data Structure:', Object.keys(programData));
-console.log('Available Majors in ปวส.:', programData['ปวส.'] ? Object.keys(programData['ปวส.']) : 'No data');
-console.log('Available Classes in Major:', programData['ปวส.'] && programData['ปวส.'][currentStudent.major] ? Object.keys(programData['ปวส.'][currentStudent.major]) : 'No data');
-
 }
 
 function updateSelectedCourses() {

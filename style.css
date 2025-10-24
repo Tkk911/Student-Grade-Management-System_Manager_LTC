@@ -40,7 +40,15 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* เพิ่ม transition แบบ smooth สำหรับ theme */
+body, header, .main-content, .grade-sheet, .control-panel, .modal-content,
+.btn, .form-control, .grades-table, .student-info, .semester-pair-header {
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 body {
@@ -125,11 +133,12 @@ header {
     align-items: center;
     gap: 6px;
     font-size: 0.8rem;
-    transition: all 0.3s ease;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .theme-toggle:hover {
     background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
 }
 
 .auth-section {
@@ -172,6 +181,7 @@ header {
 
 .btn-primary:hover {
     background-color: #e69008;
+    transform: translateY(-1px);
 }
 
 .btn-outline {
@@ -182,6 +192,7 @@ header {
 
 .btn-outline:hover {
     background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
 }
 
 .btn-success {
@@ -191,6 +202,7 @@ header {
 
 .btn-success:hover {
     background-color: #0da271;
+    transform: translateY(-1px);
 }
 
 .btn-warning {
@@ -200,6 +212,7 @@ header {
 
 .btn-warning:hover {
     background-color: #e69008;
+    transform: translateY(-1px);
 }
 
 .btn-danger {
@@ -209,6 +222,7 @@ header {
 
 .btn-danger:hover {
     background-color: #dc2626;
+    transform: translateY(-1px);
 }
 
 .btn-info {
@@ -218,6 +232,7 @@ header {
 
 .btn-info:hover {
     background-color: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
 .btn-secondary {
@@ -227,6 +242,7 @@ header {
 
 .btn-secondary:hover {
     background-color: #4b5563;
+    transform: translateY(-1px);
 }
 
 .btn-sm {
@@ -301,6 +317,7 @@ header {
 
 .search-box button:hover {
     background-color: var(--primary-dark);
+    transform: translateY(-1px);
 }
 
 /* Control Panel (Admin Mode) */
@@ -480,6 +497,14 @@ header {
     color: var(--text-primary);
 }
 
+/* ปรับให้ตัวเลขอยู่ตรงกลาง */
+.grades-table td:nth-child(3), /* หน่วยกิต */
+.grades-table td:nth-child(4), /* เกรด */
+.grades-table .grade-cell,
+.grades-table .credits-cell {
+    text-align: center;
+}
+
 .grades-table tr:nth-child(even) {
     background-color: var(--bg-secondary);
 }
@@ -582,6 +607,7 @@ header {
 
 .close-modal:hover {
     color: var(--danger);
+    transform: scale(1.1);
 }
 
 .form-row {
@@ -650,6 +676,11 @@ footer {
     font-size: 1.1rem;
     cursor: pointer;
     margin-left: 8px;
+    transition: all 0.3s ease;
+}
+
+.notification-close:hover {
+    transform: scale(1.1);
 }
 
 .notification-content {
@@ -1013,7 +1044,9 @@ footer {
 
 /* Theme Transition */
 .theme-transition * {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease !important;
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 /* Student Search in Admin Mode */
@@ -1343,4 +1376,84 @@ footer {
     background-color: var(--primary);
     color: white;
     border-color: var(--primary);
+}
+
+/* Notification Styles */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--success);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 6px;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    animation: slideIn 0.3s ease;
+    max-width: 350px;
+    transition: all 0.3s ease;
+}
+
+.notification.error {
+    background: var(--danger);
+}
+
+.notification.warning {
+    background: var(--warning);
+}
+
+.notification.info {
+    background: var(--primary);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-left: 8px;
+    transition: all 0.3s ease;
+}
+
+.notification-close:hover {
+    transform: scale(1.1);
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* เพิ่ม class สำหรับจัดกลางตัวเลข */
+.credits-cell {
+    text-align: center;
+    font-weight: 600;
+}
+
+/* ปรับปรุงการแสดงผลในตารางให้สมดุล */
+.grades-table td {
+    vertical-align: middle;
+}
+
+/* เพิ่มความสมูทให้กับการ hover */
+.grades-table tr {
+    transition: background-color 0.3s ease;
+}
+
+/* ปรับปรุงการเปลี่ยนสีธีมให้สมูทยิ่งขึ้น */
+body.theme-transition {
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }

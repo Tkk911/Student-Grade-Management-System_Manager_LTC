@@ -292,23 +292,36 @@
                     <input type="text" id="courseName" class="form-control" required>
                 </div>
                 
-                <div class="form-group">
-                    <label for="courseGrade">เกรด</label>
-                    <select id="courseGrade" class="form-control" required>
-                        <option value="">เลือกเกรด</option>
-                        <option value="4">4</option>
-                        <option value="3.5">3.5</option>
-                        <option value="3">3</option>
-                        <option value="2.5">2.5</option>
-                        <option value="2">2</option>
-                        <option value="1.5">1.5</option>
-                        <option value="1">1</option>
-                        <option value="0">0</option>
-                        <option value="มส.">มส.</option>
-                        <option value="ขร.">ขร.</option>
-                        <option value="ผ.">ผ.</option>
-                        <option value="มผ.">มผ.</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="courseGrade">เกรด</label>
+                        <select id="courseGrade" class="form-control" required>
+                            <option value="">เลือกเกรด</option>
+                            <option value="4">4</option>
+                            <option value="3.5">3.5</option>
+                            <option value="3">3</option>
+                            <option value="2.5">2.5</option>
+                            <option value="2">2</option>
+                            <option value="1.5">1.5</option>
+                            <option value="1">1</option>
+                            <option value="0">0</option>
+                            <option value="มส.">มส.</option>
+                            <option value="ขร.">ขร.</option>
+                            <option value="ผ.">ผ.</option>
+                            <option value="มผ.">มผ.</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="courseSemesterSelect">ภาคเรียน</label>
+                        <select id="courseSemesterSelect" class="form-control" required>
+                            <option value="1">ภาคเรียนที่ 1</option>
+                            <option value="2">ภาคเรียนที่ 2</option>
+                            <option value="3">ภาคเรียนที่ 3</option>
+                            <option value="4">ภาคเรียนที่ 4</option>
+                            <option value="5">ภาคเรียนที่ 5</option>
+                            <option value="6">ภาคเรียนที่ 6</option>
+                        </select>
+                    </div>
                 </div>
                 
                 <div class="form-group">
@@ -425,7 +438,7 @@
         </div>
     </footer>
     <script src="script.js"></script>
-    <script>
+<script>
         // ตัวแปรเก็บสถานะการป้องกัน
         let protectionEnabled = true;
         
